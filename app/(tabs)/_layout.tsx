@@ -1,45 +1,43 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Text } from 'react-native';
+import { WorkersProvider } from '../../context/WorkersContext';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+    <WorkersProvider>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: '#FF8C00',
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: '#333',
+            borderTopColor: '#FF8C00',
           },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarLabelStyle: {
+            color: '#ffffff',
+          },
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Dashboard',
+            tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 24 }}>🏠</Text>,
+          }}
+        />
+        
+        {/* Hidden screens - accessible only through navigation */}
+        <Tabs.Screen name="manage-workers" options={{ href: null }} />
+        <Tabs.Screen name="add-worker" options={{ href: null }} />
+        <Tabs.Screen name="find-profile" options={{ href: null }} />
+        <Tabs.Screen name="salary-history" options={{ href: null }} />
+        <Tabs.Screen name="my-receipts" options={{ href: null }} />
+        <Tabs.Screen name="document-templates" options={{ href: null }} />
+        <Tabs.Screen name="devis" options={{ href: null }} />
+        <Tabs.Screen name="invoice" options={{ href: null }} />
+        <Tabs.Screen name="order-bond" options={{ href: null }} />
+      </Tabs>
+    </WorkersProvider>
   );
 }

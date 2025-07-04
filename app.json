@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.mycompanyapp"
     },
     "web": {
       "bundler": "metro",
@@ -35,8 +36,11 @@
         }
       ]
     ],
-    "experiments": {
-      "typedRoutes": true
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e9f6f1ec-7caf-407b-85af-a526d963fc31"
+      }
     }
   }
 }

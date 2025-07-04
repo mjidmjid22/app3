@@ -1,45 +1,42 @@
-import { PropsWithChildren, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const theme = useColorScheme() ?? 'light';
-
-  return (
-    <ThemedView>
-      <TouchableOpacity
-        style={styles.heading}
-        onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}>
-        <IconSymbol
-          name="chevron.right"
-          size={18}
-          weight="medium"
-          color={theme === 'light' ? Colors.light.icon : Colors.dark.icon}
-          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
-        />
-
-        <ThemedText type="defaultSemiBold">{title}</ThemedText>
-      </TouchableOpacity>
-      {isOpen && <ThemedView style={styles.content}>{children}</ThemedView>}
-    </ThemedView>
-  );
+interface CollapsibleProps {
+  title: string;
+  children: React.ReactNode;
 }
 
+export const Collapsible: React.FC<CollapsibleProps> = ({ title, children }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={() => setOpen(!open)} style={styles.header}>
+        <Text style={styles.title}>{title} {open ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+      {open && <View style={styles.content}>{children}</View>}
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  heading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+  container: {
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  header: {
+    backgroundColor: '#f0f0f0',
+    padding: 12,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   content: {
-    marginTop: 6,
-    marginLeft: 24,
+    padding: 12,
+    backgroundColor: '#fff',
   },
 });
