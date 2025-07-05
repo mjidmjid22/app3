@@ -7,12 +7,8 @@ node_modules/
 .expo/
 dist/
 web-build/
-expo-env.d.ts
 
 # Native
-android/
-ios/
-.kotlin/
 *.orig.*
 *.jks
 *.p8
@@ -34,8 +30,15 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env.development
+.env.test
 
 # typescript
 *.tsbuildinfo
 
-app-example
+# Server build
+server/dist/
+server/node_modules/
+
+# Test files
+server/create-test-users.js

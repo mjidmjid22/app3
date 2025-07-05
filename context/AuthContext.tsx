@@ -31,110 +31,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (loginInput: string, password: string): Promise<boolean> => {
-    try {
-      // Try admin login first if input contains @
-      if (loginInput.includes('@')) {
-        try {
-          const admin = await AdminService.login(loginInput, password);
-          setUser(admin);
-          return true;
-        } catch (adminError: any) {
-          // Only use fallback if it's a connection error, not invalid credentials
-          if (adminError.code === 'ECONNREFUSED' || adminError.code === 'NETWORK_ERROR') {
-            // Fallback admin accounts when API is not available
-          const fallbackAdmins = [
-            {
-              _id: 'admin1',
-              email: 'admin@mantaevert.com',
-              password: 'admin123',
-              name: 'System Administrator',
-              role: 'Admin' as const,
-              dateCreated: new Date(),
-              lastLogin: new Date()
-            },
-            {
-              _id: 'admin2',
-              email: 'manager@mantaevert.com',
-              password: 'manager123',
-              name: 'Manager',
-              role: 'Admin' as const,
-              dateCreated: new Date(),
-              lastLogin: new Date()
-            }
-          ];
-          
-          const matchingAdmin = fallbackAdmins.find(
-            admin => admin.email === loginInput && admin.password === password
-          );
-          
-          if (matchingAdmin) {
-            const { password: _, ...adminWithoutPassword } = matchingAdmin;
-            setUser(adminWithoutPassword);
-            return true;
-          }
-          } else {
-            // If it's invalid credentials, don't try fallback
-            return false;
-          }
-        }
+    // Try admin login first if input contains @
+    if (loginInput.includes('@')) {
+      try {
+        const admin = await AdminService.login(loginInput, password);
+        setUser(admin);
+        return true;
+      } catch (adminError: any) {
+      console.error('Admin login error:', adminError.response ? adminError.response.data : adminError.message);
+      return false;
       }
-      
+    } else {
       // Try user login (workers) - use ID card number directly
       try {
         const user = await UsersService.login(loginInput, password);
         setUser(user);
         return true;
       } catch (userError: any) {
-        // Only use fallback if it's a connection error, not invalid credentials
-        if (userError.code === 'ECONNREFUSED' || userError.code === 'NETWORK_ERROR') {
-          // Fallback worker accounts when API is not available
-        const fallbackWorkers = [
-          {
-            _id: 'worker1',
-            idCardNumber: '12345',
-            name: 'John Worker',
-            role: 'Worker' as const,
-            employeeId: 'EMP001',
-            status: 'Active' as const,
-            department: 'Construction',
-            dateCreated: new Date(),
-            dailyRate: 120,
-            lastLogin: new Date()
-          },
-          {
-            _id: 'worker2',
-            idCardNumber: '67890',
-            name: 'Jane Supervisor',
-            role: 'Supervisor' as const,
-            employeeId: 'EMP002',
-            status: 'Active' as const,
-            department: 'Management',
-            dateCreated: new Date(),
-            dailyRate: 150,
-            lastLogin: new Date()
-          }
-        ];
-        
-        const matchingWorker = fallbackWorkers.find(
-          worker => worker.idCardNumber === loginInput || 
-                   (loginInput.includes('@') && loginInput.startsWith(worker.idCardNumber))
-        );
-        
-        if (matchingWorker && (password === matchingWorker.idCardNumber || password === 'worker123')) {
-          setUser(matchingWorker);
-          return true;
-        }
-        } else {
-          // If it's invalid credentials, don't try fallback
-          return false;
-        }
+      console.error('User login error:', userError.response ? userError.response.data : userError.message);
+      return false;
       }
-      
-      console.error('Login failed - no matching accounts found');
-      return false;
-    } catch (error: any) {
-      console.error('Login failed', error.response?.data || error.message);
-      return false;
     }
   };
 
