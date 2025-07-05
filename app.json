@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Mantaevert Worker Management",
-    "slug": "mantaevert-app-v2",
+    "slug": "my-company-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
