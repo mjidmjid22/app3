@@ -90,7 +90,7 @@ export default function SettingsScreen({ navigation }: any) {
 
   const handleBackupData = () => {
     Alert.alert('Backup', 'Creating backup...', [
-      { text: 'OK', onPress: () => console.log('Backup initiated') }
+      { text: 'OK', onPress: () => }
     ]);
   };
 

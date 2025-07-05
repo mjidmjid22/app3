@@ -31,23 +31,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (loginInput: string, password: string): Promise<boolean> => {
-    console.log('Attempting to log in...');
     try {
       // Try admin login first if input contains @
       if (loginInput.includes('@')) {
         try {
           const admin = await AdminService.login(loginInput, password);
           setUser(admin);
-          console.log('Admin login successful');
           return true;
         } catch (adminError: any) {
-          console.log('❌ Admin API login failed:', adminError.response?.data || adminError.message);
-          
           // Only use fallback if it's a connection error, not invalid credentials
           if (adminError.code === 'ECONNREFUSED' || adminError.code === 'NETWORK_ERROR') {
-            console.log('🔄 Trying fallback admin accounts due to connection error...');
-          
-          // Fallback admin accounts when API is not available
+            // Fallback admin accounts when API is not available
           const fallbackAdmins = [
             {
               _id: 'admin1',
@@ -76,12 +70,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (matchingAdmin) {
             const { password: _, ...adminWithoutPassword } = matchingAdmin;
             setUser(adminWithoutPassword);
-            console.log('✅ Fallback admin login successful');
             return true;
           }
           } else {
             // If it's invalid credentials, don't try fallback
-            console.log('❌ Invalid admin credentials, not trying fallback');
             return false;
           }
         }
@@ -91,16 +83,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const user = await UsersService.login(loginInput, password);
         setUser(user);
-        console.log('✅ User login successful from API');
         return true;
       } catch (userError: any) {
-        console.log('❌ User API login failed:', userError.response?.data || userError.message);
-        
         // Only use fallback if it's a connection error, not invalid credentials
         if (userError.code === 'ECONNREFUSED' || userError.code === 'NETWORK_ERROR') {
-          console.log('🔄 Trying fallback worker accounts due to connection error...');
-        
-        // Fallback worker accounts when API is not available
+          // Fallback worker accounts when API is not available
         const fallbackWorkers = [
           {
             _id: 'worker1',
@@ -135,12 +122,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (matchingWorker && (password === matchingWorker.idCardNumber || password === 'worker123')) {
           setUser(matchingWorker);
-          console.log('✅ Fallback worker login successful');
           return true;
         }
         } else {
           // If it's invalid credentials, don't try fallback
-          console.log('❌ Invalid worker credentials, not trying fallback');
           return false;
         }
       }

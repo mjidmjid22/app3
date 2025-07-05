@@ -245,8 +245,7 @@ class I18n {
         this.currentLanguage = savedLanguage as Language;
       }
     } catch (error) {
-      console.log('Error loading saved language:', error);
-    }
+      }
   }
 
   private isValidLanguage(lang: string): lang is Language {
@@ -257,9 +256,7 @@ class I18n {
     try {
       await AsyncStorage.setItem('selectedLanguage', language);
       this.currentLanguage = language;
-      console.log('Language changed to:', language);
-    } catch (error) {
-      console.log('Error saving language:', error);
+      } catch (error) {
       throw error;
     }
   }

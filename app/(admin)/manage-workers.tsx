@@ -215,10 +215,8 @@ const ManageWorkersScreen = () => {
 
   const handleToggleStatus = async (workerId: string, field: 'isChecked' | 'isPaid', value: boolean) => {
     try {
-      console.log(`Toggling ${field} to ${value} for worker ${workerId}`);
       await updateWorker(workerId, { [field]: value });
-      console.log(`Successfully updated ${field} status`);
-    } catch (error: any) {
+      } catch (error: any) {
       console.error('Failed to update worker status:', error);
       Alert.alert(t('common.error') || 'Error', `Failed to update worker status: ${error.message || 'Unknown error'}`);
     }

@@ -26,9 +26,6 @@ router.route('/check-id/:idCardNumber').get((req, res) => {
 
 // Add a new worker
 router.route('/add').post((req, res) => {
-  console.log('Request to add worker received');
-  console.log('Request body:', req.body);
-  
   const { firstName, lastName, idCardNumber, dailyRate, position, startDate } = req.body;
   
   // Validate required fields
@@ -71,7 +68,6 @@ router.route('/add').post((req, res) => {
 
   newWorker.save()
     .then((savedWorker) => {
-      console.log('Worker added successfully:', savedWorker);
       res.json(savedWorker); // Return the saved worker object instead of just a message
     })
     .catch(err => {
@@ -111,10 +107,6 @@ router.route('/:id').delete((req, res) => {
 
 // Update a worker by ID
 router.route('/update/:id').post((req, res) => {
-  console.log('Request to update worker received');
-  console.log('Worker ID:', req.params.id);
-  console.log('Update data:', req.body);
-  
   Worker.findById(req.params.id)
     .then(worker => {
       if (worker) {
@@ -132,7 +124,6 @@ router.route('/update/:id').post((req, res) => {
 
         worker.save()
           .then((updatedWorker) => {
-            console.log('Worker updated successfully:', updatedWorker);
             res.json(updatedWorker); // Return the updated worker object
           })
           .catch(err => {

@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLanguage } from '../../context/LanguageContext';
+import { API_URL } from '../../config/api.config';
 
 interface SimpleReceipt {
   id: string;
@@ -32,33 +33,25 @@ export default function MyReceiptsScreen() {
         setIsLoading(false);
         return;
       }
-
-      console.log('🔍 Loading receipts for user:', user._id, 'ID card:', (user as any)?.idCardNumber);
       
       // Get worker data first to match receipts
       let workerData = null;
       try {
         // Try to find worker by ID card number
         if ((user as any)?.idCardNumber) {
-          const response = await fetch(`http://192.168.0.114:5000/workers`);
+          const response = await fetch(`${API_URL}/workers`);
           if (response.ok) {
             const allWorkers = await response.json();
             workerData = allWorkers.find((w: any) => w.idCardNumber === (user as any).idCardNumber);
-            console.log('👤 Found worker:', workerData?.firstName, workerData?.lastName);
-          }
+            }
         }
       } catch (error) {
-        console.log('❌ Error finding worker:', error);
-      }
+        }
 
       // Get receipts from admin receipt history (same storage as admin uses)
       const storedReceipts = await AsyncStorage.getItem('receipts');
-      console.log('💾 Admin receipts storage:', storedReceipts ? 'found' : 'not found');
-      
       if (storedReceipts) {
         const allReceipts = JSON.parse(storedReceipts);
-        console.log('📄 Total receipts in admin storage:', allReceipts.length);
-        
         // Filter receipts for this specific worker
         let userReceipts = [];
         
@@ -78,8 +71,6 @@ export default function MyReceiptsScreen() {
           );
         }
         
-        console.log('📊 Filtered receipts for this user:', userReceipts.length);
-        
         // Convert admin receipts to simple receipt format
         const simpleReceipts: SimpleReceipt[] = userReceipts.map((receipt: any) => ({
           id: receipt.id,
@@ -90,14 +81,11 @@ export default function MyReceiptsScreen() {
         }));
         
         setReceipts(simpleReceipts);
-        console.log('✅ Loaded', simpleReceipts.length, 'receipts for user');
-      } else {
-        console.log('📄 No receipts found in admin storage');
+        } else {
         setReceipts([]);
       }
       
     } catch (error) {
-      console.log('❌ Error loading receipts:', error);
       setReceipts([]);
     } finally {
       setIsLoading(false);

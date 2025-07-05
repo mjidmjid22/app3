@@ -8,8 +8,6 @@ export default function AdminIndex() {
   // Create a navigation object that matches the expected interface
   const navigation = {
     navigate: (screenName: string) => {
-      console.log('Navigation called with screenName:', screenName);
-      
       // Map screen names to router paths
       const routeMap: { [key: string]: string } = {
         'AddWorker': '/(admin)/add-worker',
@@ -27,14 +25,10 @@ export default function AdminIndex() {
       };
 
       const route = routeMap[screenName];
-      console.log('Mapped route:', route);
-      
       if (route) {
-        console.log('Navigating to:', route);
         router.push(route as any);
       } else {
-        console.log('No route found for screenName:', screenName);
-      }
+        }
     }
   };
 

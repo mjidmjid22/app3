@@ -175,8 +175,8 @@ export default function EnhancedDocumentScreen({ navigation, route }: Props) {
       `Client: ${document.clientName}\n` +
       `Total: ${DocumentService.formatCurrency(calculations.grandTotal)}`,
       [
-        { text: 'Voir PDF', onPress: () => console.log('Generate PDF') },
-        { text: 'Envoyer', onPress: () => console.log('Send document') },
+        { text: 'Voir PDF', onPress: () => },
+        { text: 'Envoyer', onPress: () => },
         { text: 'OK' }
       ]
     );

@@ -5,9 +5,6 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'rea
 export default function DocumentTemplatesScreen({ navigation }: any) {
   
   const handleNavigation = (templateType: string, buttonName: string) => {
-    console.log(`🔥 ${buttonName} button pressed!`);
-    console.log('📱 Navigation object:', navigation);
-    
     if (!navigation || !navigation.navigate) {
       console.error('❌ Navigation object is missing or invalid');
       Alert.alert('Navigation Error', 'Navigation is not available');
@@ -15,7 +12,6 @@ export default function DocumentTemplatesScreen({ navigation }: any) {
     }
     
     try {
-      console.log(`🚀 Navigating to CreateDocumentScreen with template: ${templateType}`);
       navigation.navigate('CreateDocumentScreen', { templateType });
     } catch (error) {
       console.error('❌ Navigation failed:', error);

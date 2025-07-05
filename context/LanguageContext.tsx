@@ -33,21 +33,18 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setIsRTL(savedLanguage === 'ar');
       } else {
         // If unsupported language (like 'es') is found, reset to English
-        console.log('Unsupported language found:', savedLanguage, 'Resetting to English');
         await AsyncStorage.setItem('selectedLanguage', 'en');
         await i18n.changeLanguage('en');
         setCurrentLanguage('en');
         setIsRTL(false);
       }
     } catch (error) {
-      console.log('Error initializing language:', error);
       // Fallback to English and clear any problematic language setting
       try {
         await AsyncStorage.setItem('selectedLanguage', 'en');
         await i18n.changeLanguage('en');
       } catch (fallbackError) {
-        console.log('Error setting fallback language:', fallbackError);
-      }
+        }
       setCurrentLanguage('en');
       setIsRTL(false);
     }
@@ -59,9 +56,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       await i18n.changeLanguage(language);
       setCurrentLanguage(language);
       setIsRTL(language === 'ar');
-      console.log('Language changed to:', language);
-    } catch (error) {
-      console.log('Error changing language:', error);
+      } catch (error) {
       throw error;
     }
   };

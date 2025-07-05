@@ -54,20 +54,17 @@ const AdminSettingsScreen = () => {
         await i18n.changeLanguage(savedLanguage);
       } else {
         // If unsupported language (like 'es') is found, reset to English
-        console.log('Unsupported language found:', savedLanguage, 'Resetting to English');
         await AsyncStorage.setItem('selectedLanguage', 'en');
         await i18n.changeLanguage('en');
         setCurrentLanguage('en');
       }
     } catch (error) {
-      console.log('Error initializing language:', error);
       // Fallback to English and clear any problematic language setting
       try {
         await AsyncStorage.setItem('selectedLanguage', 'en');
         await i18n.changeLanguage('en');
       } catch (fallbackError) {
-        console.log('Error setting fallback language:', fallbackError);
-      }
+        }
       setCurrentLanguage('en');
     }
   };
@@ -100,7 +97,6 @@ const AdminSettingsScreen = () => {
 
   const handleLanguageChange = async (languageCode: string, languageName: string) => {
     try {
-      console.log('Changing language to:', languageCode);
       await AsyncStorage.setItem('selectedLanguage', languageCode);
       await i18n.changeLanguage(languageCode);
       setCurrentLanguage(languageCode);
@@ -186,7 +182,6 @@ const AdminSettingsScreen = () => {
         {
           text: t('common.confirm') || 'Confirm',
           onPress: () => {
-            console.log('Logging out user...');
             logout();
             router.replace('/auth/login');
           }

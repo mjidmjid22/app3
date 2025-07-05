@@ -24,10 +24,7 @@ export const useWorkers = () => {
 
   const addWorker = async (workerData: Omit<Worker, '_id'>) => {
     try {
-      console.log('useWorkers: addWorker called with data:', workerData);
       const newWorker = await WorkerService.addWorker(workerData);
-      console.log('useWorkers: Worker added successfully:', newWorker);
-      
       // Create a user account for the worker (using ID card number directly)
       try {
         const defaultPassword = workerData.idCardNumber; // Use ID card number as password
@@ -39,10 +36,8 @@ export const useWorkers = () => {
           name: `${workerData.firstName} ${workerData.lastName}`,
         };
         
-        console.log('Creating user account for worker with ID:', workerData.idCardNumber);
         await UsersService.addUser(userData);
-        console.log('User account created successfully for worker');
-      } catch (userError) {
+        } catch (userError) {
         console.error('Failed to create user account for worker:', userError);
         // Don't throw here - worker was created successfully, user creation is secondary
       }
@@ -57,10 +52,7 @@ export const useWorkers = () => {
 
   const updateWorker = async (workerId: string, updates: Partial<Worker>) => {
     try {
-      console.log('useWorkers: updateWorker called for ID:', workerId, 'with updates:', updates);
       const updatedWorker = await WorkerService.updateWorker(workerId, updates);
-      console.log('useWorkers: Worker updated successfully:', updatedWorker);
-      
       // Update the local state with the actual data returned from the server
       setWorkers(prevWorkers =>
         prevWorkers.map(worker =>

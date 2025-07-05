@@ -7,6 +7,7 @@ import { getWorker } from '../../services/worker.service';
 import { Worker } from '../../types/worker.type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLanguage } from '../../context/LanguageContext';
+import { API_URL } from '../../config/api.config';
 
 interface WorkData {
   month: string;
@@ -42,35 +43,26 @@ export default function UserDashboard() {
         setIsLoading(true);
         setError(null);
         
-        console.log('🔄 Fetching worker data for user:', user._id, 'with ID card:', (user as any)?.idCardNumber);
-        
         // Get worker data by ID card number
         let workerData = null;
         
         // First try to get worker by user ID
         try {
           workerData = await getWorker(user._id);
-          if (workerData) {
-            console.log('✅ Found worker by user ID:', workerData);
-          }
         } catch (error) {
-          console.log('❌ Worker lookup by user ID failed');
+          // Worker not found by user ID, will try by ID card number
         }
         
         // If no worker found by user ID, try to find by ID card number
         if (!workerData && (user as any)?.idCardNumber) {
-          console.log('🔄 Trying to find worker by ID card number:', (user as any).idCardNumber);
           try {
-            const response = await fetch(`http://192.168.0.114:5000/workers`);
+            const response = await fetch(`${API_URL}/workers`);
             if (response.ok) {
               const allWorkers = await response.json();
               workerData = allWorkers.find((w: any) => w.idCardNumber === (user as any).idCardNumber);
-              if (workerData) {
-                console.log('✅ Found worker by ID card number:', workerData);
-              }
             }
           } catch (workerError) {
-            console.log('❌ Error fetching workers list:', workerError);
+            // Error fetching workers list
           }
         }
         
@@ -81,17 +73,12 @@ export default function UserDashboard() {
           let workDays = 0;
           let totalSalary = 0;
           
-          console.log('📅 Getting work data from manage workers attendance system...');
-          
           try {
             const storedAttendance = await AsyncStorage.getItem('workerAttendance');
             if (storedAttendance) {
               const attendanceData = JSON.parse(storedAttendance);
               const workerAttendance = attendanceData[workerData._id];
               if (workerAttendance && workerAttendance.presentDates) {
-                console.log('📅 Found attendance data for worker:', workerAttendance);
-                console.log('📅 All present dates:', workerAttendance.presentDates);
-
                 const currentDate = new Date();
                 const currentMonth = currentDate.getMonth();
                 const currentYear = currentDate.getFullYear();
@@ -105,22 +92,13 @@ export default function UserDashboard() {
                 workDays = currentMonthPresentDates.length;
                 // Recalculate salary for the current month based on days worked
                 totalSalary = workDays * (workerData.dailyRate || 0);
-
-                console.log('📊 Using attendance data from manage workers for current month:');
-                console.log('  - Days worked (current month):', workDays);
-                console.log('  - Total salary (current month):', totalSalary);
-                console.log('  - Present dates (current month):', currentMonthPresentDates);
               } else {
-                console.log('📅 No attendance data found for this worker in manage workers system');
-                console.log('📅 Worker needs to be checked in manage workers page first');
                 setError('No attendance data found. Please ask admin to mark your attendance in manage workers page.');
               }
             } else {
-              console.log('📅 No attendance data stored - worker needs to be checked in manage workers page');
               setError('No attendance data found. Please ask admin to mark your attendance in manage workers page.');
             }
           } catch (attendanceError) {
-            console.log('📅 Error reading attendance data:', attendanceError);
             setError('Error reading attendance data.');
           }
           
@@ -131,9 +109,7 @@ export default function UserDashboard() {
             if (userReceipts.length === 0) {
               userReceipts = await ReceiptService.getReceiptsByWorkerId(user._id);
             }
-            console.log('📄 Found', userReceipts.length, 'receipts for additional stats only');
           } catch (receiptError) {
-            console.log('📝 No receipts found (only needed for additional stats)');
             userReceipts = [];
           }
           setReceipts(userReceipts);
@@ -160,11 +136,6 @@ export default function UserDashboard() {
           // Real days off = total work days in month - days worked
           const daysOff = Math.max(0, totalWorkDaysInMonth - workDays);
           
-          console.log('📅 Real days off calculation:');
-          console.log('  - Total work days in month:', totalWorkDaysInMonth);
-          console.log('  - Days worked:', workDays);
-          console.log('  - Calculated days off:', daysOff);
-          
           // Calculate pending payments from receipts (if any)
           const pendingPayment = userReceipts
             .filter(receipt => !receipt.isPaid)
@@ -188,10 +159,8 @@ export default function UserDashboard() {
             totalReceipts: userReceipts.length
           };
           
-          console.log('📊 Final work data (from manage workers attendance):', workData);
           setWorkData(workData);
         } else {
-          console.log('❌ No worker data found for user');
           setError('Worker data not found. Please contact support.');
         }
         

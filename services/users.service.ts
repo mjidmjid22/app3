@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://app2-production-8eea.up.railway.app'; // Railway deployed backend
+import { API_URL } from '../config/api.config';
 
 export interface User {
   _id: string;

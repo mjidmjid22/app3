@@ -1,29 +1,32 @@
 {
   "expo": {
-    "name": "my-company-app",
-    "slug": "my-company-app",
+    "name": "Mantaevert Worker Management",
+    "slug": "mantaevert-app-v2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mycompanyapp",
+    "scheme": "mantaevertapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mantaevert.workermanagement"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.mycompanyapp"
+      "package": "com.mantaevert.workermanagement"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "description": "Professional worker management system for Mantaevert company. Track attendance, manage receipts, and handle worker data efficiently.",
+    "githubUrl": "https://github.com/rx7-boop/app2",
     "plugins": [
       "expo-router",
       [
@@ -32,7 +35,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#000000"
         }
       ]
     ],

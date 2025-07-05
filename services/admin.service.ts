@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://192.168.0.114:5000'; // Your computer's IP address for physical device
+import { API_URL } from '../config/api.config';
 
 export interface Admin {
   _id: string;

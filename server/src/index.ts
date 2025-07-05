@@ -21,8 +21,7 @@ mongoose.connect(uri);
 
 const connection = mongoose.connection;
 connection.once('open', () => {
-  console.log('MongoDB database connection established successfully');
-});
+  });
 
 import workersRouter from './routes/workers.route';
 import receiptsRouter from './routes/receipts.route';
@@ -35,6 +34,4 @@ app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on port: ${port}`);
-  console.log(`Server accessible at: http://192.168.0.114:${port}`);
-});
+  });

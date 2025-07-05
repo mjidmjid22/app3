@@ -10,7 +10,6 @@ export default function CreateDocumentRoute() {
   const navigation = {
     goBack: () => router.back(),
     navigate: (screenName: string) => {
-      console.log('Navigation called with screenName:', screenName);
       // Add any specific navigation logic here if needed
       router.push(`/(admin)/${screenName.toLowerCase()}` as any);
     }

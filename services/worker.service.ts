@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'https://app2-production-8eea.up.railway.app'; // Railway deployed backend
+import { API_URL } from '../config/api.config';
 
 export interface Worker {
   _id: string;
@@ -80,12 +80,7 @@ export class WorkerService {
 
   static async checkIdCardExists(idCardNumber: string): Promise<boolean> {
     try {
-      console.log('WorkerService: Checking ID card existence for:', idCardNumber);
-      console.log('WorkerService: Check ID URL:', `${API_URL}/workers/check-id/${encodeURIComponent(idCardNumber)}`);
-      
       const response = await axios.get(`${API_URL}/workers/check-id/${encodeURIComponent(idCardNumber)}`);
-      console.log('WorkerService: Check ID response:', response.data);
-      
       return response.data.exists;
     } catch (error: any) {
       console.error('WorkerService: Error checking ID card existence:', error);
@@ -105,9 +100,6 @@ export class WorkerService {
   }
 
   static async addWorker(workerData: Omit<Worker, '_id'>): Promise<Worker> {
-    console.log('WorkerService: Making API call to add worker:', workerData);
-    console.log('WorkerService: API URL:', `${API_URL}/workers/add`);
-    
     // Format the data properly for the backend
     const formattedData = {
       ...workerData,
@@ -117,11 +109,8 @@ export class WorkerService {
       dailyRate: Number(workerData.dailyRate)
     };
     
-    console.log('WorkerService: Formatted data:', formattedData);
-    
     try {
       const response = await axios.post(`${API_URL}/workers/add`, formattedData);
-      console.log('WorkerService: API response:', response.data);
       return response.data;
     } catch (error: any) {
       console.error('WorkerService: API call failed:', error);
@@ -144,11 +133,8 @@ export class WorkerService {
   }
 
   static async updateWorker(workerId: string, updates: Partial<Worker>): Promise<Worker> {
-    console.log('WorkerService: Updating worker:', workerId, 'with data:', updates);
-    
     try {
       const response = await axios.post(`${API_URL}/workers/update/${workerId}`, updates);
-      console.log('WorkerService: Worker updated successfully:', response.data);
       return response.data;
     } catch (error: any) {
       console.error('WorkerService: Update worker failed:', error);

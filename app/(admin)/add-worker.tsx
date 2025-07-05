@@ -18,8 +18,6 @@ const AddWorkerScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddWorker = async () => {
-    console.log('Add Worker button clicked');
-    
     if (isLoading) return; // Prevent multiple submissions
     
     // Validate required fields
@@ -52,7 +50,6 @@ const AddWorkerScreen = () => {
     
     try {
       // Check if ID card number already exists
-      console.log('Checking if ID card number exists...');
       const idExists = await WorkerService.checkIdCardExists(idCardNumber.trim());
       if (idExists) {
         Alert.alert(t('addWorker.idCardNumberExists', { idCard: idCardNumber.trim() }) || `Error: A worker with ID card number "${idCardNumber.trim()}" already exists. Please use a different ID card number.`);
@@ -68,11 +65,7 @@ const AddWorkerScreen = () => {
         position: position.trim(), 
         startDate 
       };
-      console.log('Form data:', workerData);
-      
-      console.log('Calling addWorker function...');
       await addWorker(workerData);
-      console.log('Worker added successfully');
       Alert.alert(t('addWorker.workerAddedSuccessfully') || 'Worker added successfully!');
       
       // Clear the form

@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { getWorker } from '../../services/worker.service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLanguage } from '../../context/LanguageContext';
+import { API_URL } from '../../config/api.config';
 
 interface SalaryRecord {
   month: string;
@@ -37,23 +38,19 @@ export default function SalaryHistoryScreen() {
       setIsLoading(true);
       setError(null);
 
-      console.log('📊 Loading salary history for user:', user._id);
-
       // Get worker data
       let workerData = null;
       try {
         // Try to find by ID card number first
         if ((user as any)?.idCardNumber) {
-          const response = await fetch(`http://192.168.0.114:5000/workers`);
+          const response = await fetch(`${API_URL}/workers`);
           if (response.ok) {
             const allWorkers = await response.json();
             workerData = allWorkers.find((w: any) => w.idCardNumber === (user as any).idCardNumber);
-            console.log('👤 Found worker:', workerData?.firstName, workerData?.lastName);
-          }
+            }
         }
       } catch (error) {
-        console.log('❌ Error finding worker:', error);
-      }
+        }
 
       if (!workerData) {
         setError('Worker data not found');
@@ -72,8 +69,6 @@ export default function SalaryHistoryScreen() {
           const workerAttendance = attendanceData[workerData._id];
 
           if (workerAttendance && workerAttendance.presentDates) {
-            console.log('📅 Found attendance data with', workerAttendance.presentDates.length, 'present dates');
-            
             // Group present dates by month/year
             const monthlyData: { [key: string]: SalaryRecord } = {};
 
@@ -106,16 +101,13 @@ export default function SalaryHistoryScreen() {
           }
         }
       } catch (attendanceError) {
-        console.log('📅 No attendance data found');
-      }
+        }
 
       // 2. Get data from admin receipts (receipt history)
       try {
         const storedReceipts = await AsyncStorage.getItem('receipts');
         if (storedReceipts) {
           const allReceipts = JSON.parse(storedReceipts);
-          console.log('📄 Found', allReceipts.length, 'total receipts in admin system');
-          
           // Filter receipts for this worker
           const userReceipts = allReceipts.filter((receipt: any) => 
             receipt.workerId === workerData._id ||
@@ -124,8 +116,6 @@ export default function SalaryHistoryScreen() {
             receipt.workerName?.includes(workerData.lastName) ||
             receipt.workerName?.includes(`${workerData.firstName} ${workerData.lastName}`)
           );
-
-          console.log('📊 Found', userReceipts.length, 'receipts for this worker');
 
           // Group receipts by month and add to salary history
           const receiptMonthlyData: { [key: string]: SalaryRecord } = {};
@@ -157,12 +147,10 @@ export default function SalaryHistoryScreen() {
           });
         }
       } catch (receiptError) {
-        console.log('📄 No receipt data found');
-      }
+        }
 
       // 3. If no real data found, create sample historical data
       if (salaryRecords.length === 0) {
-        console.log('📊 No real data found, creating sample salary history');
         const currentDate = new Date();
         const sampleRecords: SalaryRecord[] = [];
 
@@ -194,8 +182,7 @@ export default function SalaryHistoryScreen() {
       });
 
       setSalaryHistory(salaryRecords);
-      console.log('✅ Loaded', salaryRecords.length, 'salary records');
-    } catch (err) {
+      } catch (err) {
       console.error('❌ Error fetching salary history:', err);
       setError('Unable to load salary history');
     } finally {
