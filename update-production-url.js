@@ -11,8 +11,8 @@ if (!railwayUrl) {
 }
 
 // Validate URL format
-if (!railwayUrl.startsWith('https://') || !railwayUrl.includes('railway.app')) {
-  console.error('❌ Invalid Railway URL format. Expected: https://your-app.railway.app');
+if (!railwayUrl.startsWith('https://')) {
+  console.error('❌ Invalid URL format. Expected: https://your-app-url');
   process.exit(1);
 }
 
@@ -21,7 +21,7 @@ try {
   const envProductionPath = path.join(__dirname, '.env.production');
   let envContent = fs.readFileSync(envProductionPath, 'utf8');
   envContent = envContent.replace(
-    /EXPO_PUBLIC_API_URL=https:\/\/your-railway-app-url\.railway\.app/,
+    /EXPO_PUBLIC_API_URL=https:\/\/[^"'\s]+/,
     `EXPO_PUBLIC_API_URL=${railwayUrl}`
   );
   fs.writeFileSync(envProductionPath, envContent);

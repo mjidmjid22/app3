@@ -7,11 +7,11 @@ export const API_CONFIG = {
   DEVELOPMENT_URL: process.env.EXPO_PUBLIC_API_URL || 'http://192.168.0.113:5000',
   
   // Production (Railway deployment)
-  PRODUCTION_URL: process.env.EXPO_PUBLIC_API_URL || 'https://app2-production-8eea.up.railway.app',
+  PRODUCTION_URL: process.env.EXPO_PUBLIC_API_URL || 'https://mantaeuvert-dhahivr0v-hamza-mjids-projects.vercel.app',
   
   // Get current API URL based on environment
   BASE_URL: process.env.EXPO_PUBLIC_API_URL || (isProduction 
-    ? 'https://app2-production-8eea.up.railway.app'
+    ? 'https://mantaeuvert-dhahivr0v-hamza-mjids-projects.vercel.app'
     : 'http://192.168.0.113:5000')
 };
 
