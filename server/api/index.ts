@@ -64,4 +64,10 @@ app.use('/receipts', receiptsRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 
-export default app;
+// Export for Vercel serverless function
+export default (req: any, res: any) => {
+  return app(req, res);
+};
+
+// Also export the app for other uses
+export { app };
