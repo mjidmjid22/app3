@@ -8,7 +8,7 @@ const AddWorkerScreen = () => {
   const { addWorker } = useWorkers();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-   const [email, setEmail] = useState('');
+  // Removed email field - workers don't need email
   const [idCardNumber, setIdCardNumber] = useState('');
   const [dailyRate, setDailyRate] = useState('');
   const [position, setPosition] = useState('');
@@ -29,10 +29,7 @@ const AddWorkerScreen = () => {
       alert('Please enter last name');
       return;
     }
-    if (!email.trim()) {
-      alert('Please enter email');
-      return;
-    }
+    // Removed email validation - workers don't need email
     if (!idCardNumber.trim()) {
       alert('Please enter ID card number');
       return;
@@ -64,6 +61,7 @@ const AddWorkerScreen = () => {
         dailyRate: parseFloat(dailyRate), 
         position: position.trim(), 
         startDate 
+        // Removed email from workerData - workers don't need email
       };
       console.log('Form data:', workerData);
       
@@ -115,6 +113,7 @@ const AddWorkerScreen = () => {
         value={lastName}
         onChangeText={setLastName}
       />
+      {/* Removed Email field - workers don't need email */}
       <TextInput
         style={styles.input}
         placeholder="ID Card Number"

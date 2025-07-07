@@ -1,39 +1,75 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
+import { UsersService } from '../../services/users.service';
 
 export default function AddWorkerScreen() {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [idCardNumber, setIdCardNumber] = useState('');
+  // Removed email field - workers don't need email
   const [department, setDepartment] = useState('');
   const [dailyRate, setDailyRate] = useState('');
-  const { register } = useAuth();
 
   const handleAddWorker = async () => {
-    const success = await register({
-      name,
-      email,
-      department,
-      employeeId: Math.random().toString(36).substring(7),
-      role: 'Worker',
-      status: 'Active',
-      dateCreated: new Date(),
-      dailyRate: parseFloat(dailyRate) || 0,
-    });
+    if (!idCardNumber.trim()) {
+      Alert.alert('Error', 'ID Card Number is required');
+      return;
+    }
 
-    if (success) {
-      Alert.alert('Success', 'Worker added!');
-    } else {
-      Alert.alert('Error', 'Failed to add worker.');
+    try {
+      const workerData = {
+        idCardNumber: idCardNumber.trim(),
+        name: name.trim() || undefined,
+        role: 'Worker' as const,
+        department: department.trim() || undefined,
+        dailyRate: parseFloat(dailyRate) || undefined,
+        employeeId: Math.random().toString(36).substring(7),
+        status: 'Active' as const,
+        dateCreated: new Date(),
+      };
+
+      await UsersService.addUser(workerData);
+      Alert.alert('Success', 'Worker added successfully!');
+      
+      // Clear form
+      setName('');
+      setIdCardNumber('');
+      setDepartment('');
+      setDailyRate('');
+    } catch (error: any) {
+      console.error('Add worker error:', error);
+      Alert.alert('Error', error.response?.data || 'Failed to add worker');
     }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput placeholder="Name" value={name} onChangeText={setName} style={styles.input} />
-      <TextInput placeholder="Email" value={email} onChangeText={setEmail} style={styles.input} />
-      <TextInput placeholder="Department" value={department} onChangeText={setDepartment} style={styles.input} />
-      <TextInput placeholder="Daily Rate" value={dailyRate} onChangeText={setDailyRate} style={styles.input} keyboardType="numeric" />
+      <TextInput 
+        placeholder="ID Card Number *" 
+        value={idCardNumber} 
+        onChangeText={setIdCardNumber} 
+        style={styles.input}
+        keyboardType="numeric"
+      />
+      <TextInput 
+        placeholder="Name" 
+        value={name} 
+        onChangeText={setName} 
+        style={styles.input} 
+      />
+      {/* Removed Email field - workers don't need email */}
+      <TextInput 
+        placeholder="Department" 
+        value={department} 
+        onChangeText={setDepartment} 
+        style={styles.input} 
+      />
+      <TextInput 
+        placeholder="Daily Rate" 
+        value={dailyRate} 
+        onChangeText={setDailyRate} 
+        style={styles.input} 
+        keyboardType="numeric" 
+      />
       <Button title="Add Worker" onPress={handleAddWorker} />
     </View>
   );
