@@ -1,4 +1,3 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -59,6 +58,6 @@ try {
 }
 
 // Export for Vercel serverless function
-export default (req: VercelRequest, res: VercelResponse) => {
+export default (req: any, res: any) => {
   return app(req, res);
 };

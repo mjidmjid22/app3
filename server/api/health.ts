@@ -1,4 +1,3 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
@@ -21,7 +20,7 @@ if (mongoose.connection.readyState === 0) {
   }
 }
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+export default function handler(req: any, res: any) {
   res.status(200).json({
     status: 'OK',
     message: 'Mantaevert API is running on Vercel',
