@@ -7,8 +7,7 @@
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "vercel": "echo 'Vercel deployment'",
-    "vercel-build": "tsc"
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "axios": "^1.10.0",
