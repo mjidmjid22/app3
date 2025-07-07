@@ -1,0 +1,8 @@
+# Ignore everything except what we need
+node_modules
+.env
+.env.local
+dist
+*.log
+.DS_Store
+.git
