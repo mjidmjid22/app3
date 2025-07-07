@@ -16,10 +16,20 @@ router.route('/add').post(async (req, res) => {
   const { idCardNumber, password, role, name } = req.body;
 
   try {
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    let passwordHash;
+    
+    // Only hash password if provided (workers might not have passwords)
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      passwordHash = await bcrypt.hash(password, salt);
+    }
 
-    const newUser = new User({ idCardNumber, passwordHash, role, name });
+    const newUser = new User({ 
+      idCardNumber, 
+      passwordHash, // Will be undefined if no password provided
+      role, 
+      name 
+    });
 
     await newUser.save();
     res.json('User added!');
@@ -35,13 +45,25 @@ router.route('/login').post(async (req, res) => {
   try {
     const user = await User.findOne({ idCardNumber });
     if (!user) {
-      return res.status(400).json('Invalid ID card number or password');
+      return res.status(400).json('Invalid ID card number');
     }
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch) {
-      return res.status(400).json('Invalid ID card number or password');
+    // If password is provided, validate it (for users with passwords)
+    // If no password provided or empty, allow login for workers without passwords
+    if (password && user.passwordHash) {
+      const isMatch = await bcrypt.compare(password, user.passwordHash);
+      if (!isMatch) {
+        return res.status(400).json('Invalid password');
+      }
+    } else if (password && !user.passwordHash) {
+      return res.status(400).json('This user does not require a password');
+    } else if (!password && user.passwordHash) {
+      return res.status(400).json('Password required for this user');
     }
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
 
     res.json({ 
       _id: user._id, 

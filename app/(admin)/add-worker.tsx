@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useWorkers } from '../../hooks/useWorkers';
 import { WorkerService } from '../../services/worker.service';
 import { Colors } from '../../constants/Colors';
-import { useTranslation } from 'react-i18next';
 
 const AddWorkerScreen = () => {
   const { addWorker } = useWorkers();
-  const { t } = useTranslation();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+   const [email, setEmail] = useState('');
   const [idCardNumber, setIdCardNumber] = useState('');
   const [dailyRate, setDailyRate] = useState('');
   const [position, setPosition] = useState('');
@@ -18,31 +16,33 @@ const AddWorkerScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddWorker = async () => {
+    console.log('Add Worker button clicked');
+    
     if (isLoading) return; // Prevent multiple submissions
     
     // Validate required fields
     if (!firstName.trim()) {
-      Alert.alert(t('addWorker.pleaseEnterFirstName') || 'Please enter first name');
+      alert('Please enter first name');
       return;
     }
     if (!lastName.trim()) {
-      Alert.alert(t('addWorker.pleaseEnterLastName') || 'Please enter last name');
+      alert('Please enter last name');
       return;
     }
-    if (!phoneNumber.trim()) {
-      Alert.alert(t('addWorker.pleaseEnterPhoneNumber') || 'Please enter phone number');
+    if (!email.trim()) {
+      alert('Please enter email');
       return;
     }
     if (!idCardNumber.trim()) {
-      Alert.alert(t('addWorker.pleaseEnterIdCardNumber') || 'Please enter ID card number');
+      alert('Please enter ID card number');
       return;
     }
     if (!dailyRate.trim() || isNaN(parseFloat(dailyRate)) || parseFloat(dailyRate) <= 0) {
-      Alert.alert(t('addWorker.pleaseEnterValidDailyRate') || 'Please enter a valid daily rate');
+      alert('Please enter a valid daily rate');
       return;
     }
     if (!position.trim()) {
-      Alert.alert(t('addWorker.pleaseEnterPosition') || 'Please enter position');
+      alert('Please enter position');
       return;
     }
     
@@ -50,28 +50,31 @@ const AddWorkerScreen = () => {
     
     try {
       // Check if ID card number already exists
+      console.log('Checking if ID card number exists...');
       const idExists = await WorkerService.checkIdCardExists(idCardNumber.trim());
       if (idExists) {
-        Alert.alert(t('addWorker.idCardNumberExists', { idCard: idCardNumber.trim() }) || `Error: A worker with ID card number "${idCardNumber.trim()}" already exists. Please use a different ID card number.`);
+        alert(`Error: A worker with ID card number "${idCardNumber.trim()}" already exists. Please use a different ID card number.`);
         return;
       }
       
       const workerData = { 
         firstName: firstName.trim(), 
         lastName: lastName.trim(), 
-        phoneNumber: phoneNumber.trim(),
         idCardNumber: idCardNumber.trim(), 
         dailyRate: parseFloat(dailyRate), 
         position: position.trim(), 
         startDate 
       };
+      console.log('Form data:', workerData);
+      
+      console.log('Calling addWorker function...');
       await addWorker(workerData);
-      Alert.alert(t('addWorker.workerAddedSuccessfully') || 'Worker added successfully!');
+      console.log('Worker added successfully');
+      alert('Worker added successfully!');
       
       // Clear the form
       setFirstName('');
       setLastName('');
-      setPhoneNumber('');
       setIdCardNumber('');
       setDailyRate('');
       setPosition('');
@@ -81,14 +84,14 @@ const AddWorkerScreen = () => {
       
       // Handle specific error cases
       if (error.message && error.message.includes('Worker with this ID card number already exists')) {
-        Alert.alert(t('addWorker.idCardNumberExists', { idCard: idCardNumber.trim() }) || `Error: A worker with ID card number "${idCardNumber.trim()}" already exists. Please use a different ID card number.`);
+        alert(`Error: A worker with ID card number "${idCardNumber.trim()}" already exists. Please use a different ID card number.`);
       } else if (error.message && error.message.includes('Server Error (400)')) {
         // Extract the actual error message from the server response
         const match = error.message.match(/Server Error \(400\): "(.+)"/);
         const serverMessage = match ? match[1] : 'Invalid data provided';
-        Alert.alert(t('addWorker.errorAddingWorker', { error: serverMessage }) || `Error adding worker: ${serverMessage}`);
+        alert(`Error: ${serverMessage}`);
       } else {
-        Alert.alert(t('addWorker.errorAddingWorker', { error: error.message || 'Unknown error occurred' }) || `Error adding worker: ${error.message || 'Unknown error occurred'}`);
+        alert('Error adding worker: ' + (error.message || 'Unknown error occurred'));
       }
     } finally {
       setIsLoading(false);
@@ -97,39 +100,31 @@ const AddWorkerScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('addWorker.title') || 'Add Worker'}</Text>
+      <Text style={styles.title}>Add Worker</Text>
       <TextInput
         style={styles.input}
-        placeholder={t('addWorker.firstName') || 'First Name'}
+        placeholder="First Name"
         placeholderTextColor={Colors.custom.primary}
         value={firstName}
         onChangeText={setFirstName}
       />
       <TextInput
         style={styles.input}
-        placeholder={t('addWorker.lastName') || 'Last Name'}
+        placeholder="Last Name"
         placeholderTextColor={Colors.custom.primary}
         value={lastName}
         onChangeText={setLastName}
       />
       <TextInput
         style={styles.input}
-        placeholder={t('addWorker.phoneNumber') || 'Phone Number'}
-        placeholderTextColor={Colors.custom.primary}
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-        keyboardType="phone-pad"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={t('addWorker.idCardNumber') || 'ID Card Number'}
+        placeholder="ID Card Number"
         placeholderTextColor={Colors.custom.primary}
         value={idCardNumber}
         onChangeText={setIdCardNumber}
       />
       <TextInput
         style={styles.input}
-        placeholder={t('addWorker.dailyRate') || 'Daily Rate'}
+        placeholder="Daily Rate"
         placeholderTextColor={Colors.custom.primary}
         value={dailyRate}
         onChangeText={setDailyRate}
@@ -137,7 +132,7 @@ const AddWorkerScreen = () => {
       />
       <TextInput
         style={styles.input}
-        placeholder={t('addWorker.position') || 'Position'}
+        placeholder="Position"
         placeholderTextColor={Colors.custom.primary}
         value={position}
         onChangeText={setPosition}
@@ -145,7 +140,7 @@ const AddWorkerScreen = () => {
       {/* TODO: Implement a proper date picker */}
       <TextInput
         style={styles.input}
-        placeholder={t('addWorker.startDate') || 'Start Date (YYYY-MM-DD)'}
+        placeholder="Start Date (YYYY-MM-DD)"
         placeholderTextColor={Colors.custom.primary}
         value={startDate.toISOString().split('T')[0]}
         onChangeText={(text) => setStartDate(new Date(text))}
@@ -158,7 +153,7 @@ const AddWorkerScreen = () => {
         {isLoading ? (
           <ActivityIndicator color={Colors.custom.primary} />
         ) : (
-          <Text style={styles.buttonText}>{t('addWorker.addWorker') || 'Add Worker'}</Text>
+          <Text style={styles.buttonText}>Add Worker</Text>
         )}
       </TouchableOpacity>
     </View>

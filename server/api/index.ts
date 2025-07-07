@@ -17,12 +17,20 @@ if (!uri) {
 }
 
 // Connect to MongoDB with proper error handling
-mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 })
+mongoose.connect(uri, { 
+  serverSelectionTimeoutMS: 30000, // 30 seconds
+  socketTimeoutMS: 45000, // 45 seconds
+  bufferCommands: false,
+  maxPoolSize: 10,
+  retryWrites: true,
+  w: 'majority'
+})
   .then(() => {
     console.log('✅ Connected to MongoDB successfully');
   })
   .catch((error) => {
     console.error('❌ MongoDB connection error:', error);
+    console.log('🔄 Continuing without MongoDB - some features may not work');
   });
 
 const connection = mongoose.connection;

@@ -13,19 +13,14 @@ export default function LoginScreen({ navigation }: any) {
     try {
       if (isAdminLogin) {
         // Admin login requires both email and password
-        const success = await login(loginInput, password);
-        if (!success) {
-          Alert.alert('Login Failed', 'Invalid credentials');
-        }
+        await login(loginInput, password);
       } else {
         // Worker login only requires ID card number
-        const success = await login(loginInput, ''); // Empty password for workers
-        if (!success) {
-          Alert.alert('Login Failed', 'Invalid ID card number');
-        }
+        await login(loginInput, ''); // Empty password for workers
       }
+      // Login successful - navigation will be handled by the auth context
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert('Login Failed', error.message || 'Invalid login credentials');
     }
   };
 

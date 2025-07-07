@@ -31,26 +31,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (loginInput: string, password: string): Promise<boolean> => {
-    // Try admin login first if input contains @
-    if (loginInput.includes('@')) {
-      try {
+    try {
+      // Try admin login first if input contains @
+      if (loginInput.includes('@')) {
         const admin = await AdminService.login(loginInput, password);
         setUser(admin);
         return true;
-      } catch (adminError: any) {
-      console.error('Admin login error:', adminError.response ? adminError.response.data : adminError.message);
-      return false;
-      }
-    } else {
-      // Try user login (workers) - use ID card number directly
-      try {
+      } else {
+        // Try user login (workers) - use ID card number directly
         const user = await UsersService.login(loginInput, password);
         setUser(user);
         return true;
-      } catch (userError: any) {
-      console.error('User login error:', userError.response ? userError.response.data : userError.message);
-      return false;
       }
+    } catch (error: any) {
+      console.error('Login error:', error.response ? error.response.data : error.message);
+      // You can throw the error to let the LoginScreen handle it
+      throw new Error(error.response?.data || error.message || 'Login failed');
     }
   };
 
