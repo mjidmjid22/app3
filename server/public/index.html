@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mantaevert API</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .endpoint { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        code { background: #e0e0e0; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Mantaevert API</h1>
+        <p>Welcome to the Mantaevert Worker Management API</p>
+        
+        <h2>Available Endpoints:</h2>
+        
+        <div class="endpoint">
+            <strong>Health Check:</strong><br>
+            <code>GET /api/health</code><br>
+            Returns API status and MongoDB connection info
+        </div>
+        
+        <div class="endpoint">
+            <strong>User Login:</strong><br>
+            <code>POST /api/users/login</code><br>
+            Body: <code>{"idCardNumber": "123456789", "password": ""}</code>
+        </div>
+        
+        <div class="endpoint">
+            <strong>Admin Login:</strong><br>
+            <code>POST /api/admin/login</code><br>
+            Body: <code>{"email": "admin@example.com", "password": "password"}</code>
+        </div>
+        
+        <div class="endpoint">
+            <strong>Test Endpoint:</strong><br>
+            <code>GET /api/hello</code><br>
+            Simple test endpoint
+        </div>
+        
+        <h2>Quick Test:</h2>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <div id="result" style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px; display: none;"></div>
+        
+        <script>
+            async function testHealth() {
+                const result = document.getElementById('result');
+                result.style.display = 'block';
+                result.innerHTML = 'Testing...';
+                
+                try {
+                    const response = await fetch('/api/health');
+                    const data = await response.json();
+                    result.innerHTML = '<strong>Success!</strong><br><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                } catch (error) {
+                    result.innerHTML = '<strong>Error:</strong> ' + error.message;
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
