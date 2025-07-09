@@ -7,11 +7,11 @@ export const API_CONFIG = {
   DEVELOPMENT_URL: process.env.EXPO_PUBLIC_API_URL || 'http://192.168.0.113:5000',
   
   // Production (New Vercel deployment without authentication)
-  PRODUCTION_URL: process.env.EXPO_PUBLIC_API_URL || 'https://mantaeuvert-ogwqqcbh0-hamza-mjids-projects.vercel.app/api',
+  PRODUCTION_URL: process.env.EXPO_PUBLIC_API_URL || 'https://mantaeuvert-5y5xqwsvm-hamza-mjids-projects.vercel.app/api',
   
   // Get current API URL based on environment
   BASE_URL: process.env.EXPO_PUBLIC_API_URL || (isProduction 
-    ? 'https://mantaeuvert-ogwqqcbh0-hamza-mjids-projects.vercel.app/api'
+    ? 'https://mantaeuvert-5y5xqwsvm-hamza-mjids-projects.vercel.app/api'
     : 'http://192.168.0.113:5000')
 };
 
