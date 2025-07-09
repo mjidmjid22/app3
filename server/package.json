@@ -2,11 +2,11 @@
   "name": "my-company-app-server",
   "version": "1.0.0",
   "description": "Server for My Company App",
-  "main": "dist/index.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node api/index.js",
     "dev": "ts-node src/index.ts",
-    "build": "tsc",
+    "build": "tsc && cp -r src/routes api/ && cp -r src/models api/",
     "vercel-build": "npm run build"
   },
   "dependencies": {
@@ -25,8 +25,5 @@
     "@types/node": "^18.15.11",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
-  },
-  "cli": {
-    "version": "latest"
   }
 }

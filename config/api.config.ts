@@ -6,12 +6,12 @@ export const API_CONFIG = {
   // Development (local server) - will be overridden by .env.local
   DEVELOPMENT_URL: process.env.EXPO_PUBLIC_API_URL || 'http://192.168.0.113:5000',
   
-  // Production (Railway deployment)
-  PRODUCTION_URL: process.env.EXPO_PUBLIC_API_URL || 'https://mantaeuvert-6ymu14ovg-hamza-mjids-projects.vercel.app',
+  // Production (New Vercel deployment without authentication)
+  PRODUCTION_URL: process.env.EXPO_PUBLIC_API_URL || 'https://mantaeuvert-ogwqqcbh0-hamza-mjids-projects.vercel.app/api',
   
   // Get current API URL based on environment
   BASE_URL: process.env.EXPO_PUBLIC_API_URL || (isProduction 
-    ? 'https://mantaeuvert-6ymu14ovg-hamza-mjids-projects.vercel.app'
+    ? 'https://mantaeuvert-ogwqqcbh0-hamza-mjids-projects.vercel.app/api'
     : 'http://192.168.0.113:5000')
 };
 

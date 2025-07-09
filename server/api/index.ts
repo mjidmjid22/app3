@@ -58,6 +58,4 @@ try {
 }
 
 // Export for Vercel serverless function
-export default (req: any, res: any) => {
-  return app(req, res);
-};
+export default app;

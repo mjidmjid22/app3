@@ -1,8 +1,7 @@
-# Ignore everything except what we need
 node_modules
 .env
 .env.local
+.git
+src
 dist
 *.log
-.DS_Store
-.git
